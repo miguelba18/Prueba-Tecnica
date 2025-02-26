@@ -1,11 +1,12 @@
-
+import Gantt from './components/Gantt'
 function App() {
   
 
   return (
   
       <div>
-        <h1 className='text-green-500 text-4xl'>Prueba tailwind y prueba de github</h1>
+        <h1 className='text-green-500 text-4xl'>Diagrama de Gantt</h1>
+        <Gantt />
       </div>
       
   )
