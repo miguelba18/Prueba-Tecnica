@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import "dhtmlx-gantt/codebase/dhtmlxgantt.css";
 import gantt from "dhtmlx-gantt";
+import { useGanttTasks } from "../hooks/useGanttTasks";
 
 const GanttChart = () => {
   const ganttContainer = useRef(null);
+  const { tasks,createTasks,updateTask,deleteTasks } = useGanttTasks();
 
   useEffect(() => {
     gantt.config.readonly = false; // Permitir edición de tareas
