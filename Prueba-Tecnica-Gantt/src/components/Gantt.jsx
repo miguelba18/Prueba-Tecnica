@@ -5,32 +5,90 @@ import { useGanttTasks } from "../hooks/useGanttTasks";
 
 const GanttChart = () => {
   const ganttContainer = useRef(null);
-  const { tasks,createTasks,updateTask,deleteTasks } = useGanttTasks();
+  const { tasks, createTasks, updateTask, deleteTasks } = useGanttTasks();
+  const isEventAttached = useRef(false);
 
   useEffect(() => {
-    gantt.config.readonly = false; // Permitir edición de tareas
+    gantt.config.readonly = false;
     gantt.init(ganttContainer.current);
 
-    // Definir estructuras de tareas
-    const tasks = {
-      data: [
-        { id: 1, text: "Proyecto 1", start_date: "2024-03-01", duration: 10, progress: 0.4, type: "project", open: true },
-        { id: 2, text: "Tarea Principal 1", start_date: "2024-03-02", duration: 6, parent: 1, progress: 0.6, type: "task" },
-        { id: 3, text: "Subtarea 1.1", start_date: "2024-03-03", duration: 3, parent: 2, progress: 0.8, type: "task" },
-        { id: 4, text: "Subtarea 1.2", start_date: "2024-03-04", duration: 4, parent: 2, progress: 0.5, type: "task" },
-        { id: 5, text: "Tarea Principal 2", start_date: "2024-03-05", duration: 7, parent: 1, progress: 0.3, type: "task" },
-        { id: 6, text: "Subtarea 2.1", start_date: "2024-03-06", duration: 5, parent: 5, progress: 0.7, type: "task" },
-      ],
-    };
-
-    gantt.parse(tasks);
-
     return () => {
-      gantt.clearAll(); // Limpia el Gantt al desmontar el componente
+      gantt.clearAll();
     };
   }, []);
 
-  return <div ref={ganttContainer} style={{ width: "100%", height: "500px" }} />;
+  useEffect(() => {
+    gantt.clearAll();
+    if (!tasks || tasks.length === 0) return; // Evita parsear si no hay tareas
+
+    const formattedData = {
+      data: tasks.map((task) => ({
+        ...task,
+        start_date: task.start_date.split("T")[0], // Extrae solo la parte YYYY-MM-DD
+      })),
+    };
+
+    gantt.parse(formattedData);
+  }, [tasks]);
+
+  useEffect(() => {
+    if (isEventAttached.current) return; // Evita múltiples registros
+    isEventAttached.current = true;
+
+    // Evento para agregar tarea
+    gantt.attachEvent("onBeforeTaskAdd", async (id, task) => {
+      console.log("📌 Nueva tarea detectada en onBeforeTaskAdd:", task);
+
+      const newTask = {
+        text: task.text,
+        start_date: new Date(task.start_date).toISOString().split("T")[0], // Convertir a YYYY-MM-DD
+        duration: task.duration,
+        progress: task.progress || 0,
+        parent: task.parent || null,
+      };
+
+      try {
+        const createdTask = await createTasks(newTask);
+        if (createdTask && createdTask.id) {
+          gantt.changeTaskId(id, createdTask.id);
+          gantt.refreshData();
+        }
+      } catch (error) {
+        console.error("❌ Error al crear tarea:", error);
+      }
+      return false;
+    });
+
+    // Evento para actualizar tarea
+    gantt.attachEvent("onAfterTaskUpdate", async (id, task) => {
+      const updatedTask = {
+        id,
+        text: task.text,
+        start_date: task.start_date,
+        duration: task.duration,
+        progress: task.progress,
+        parent: task.parent,
+      };
+      try {
+        await updateTask(updatedTask);
+      } catch (error) {
+        console.error("Error actualizando tarea:", error);
+      }
+    });
+
+    // Evento para eliminar tarea
+    gantt.attachEvent("onAfterTaskDelete", async (id) => {
+      try {
+        await deleteTasks(id);
+      } catch (error) {
+        console.error("Error eliminando tarea:", error);
+      }
+    });
+  }, []);
+
+  return (
+    <div ref={ganttContainer} style={{ width: "100%", height: "500px" }} />
+  );
 };
 
 export default GanttChart;

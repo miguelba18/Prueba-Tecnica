@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import { toast } from "react-toastify";
 
 const API_URL = 'http://localhost:5000/api/tasks';
 
@@ -9,7 +10,23 @@ export const useGanttTasks = () => {
         try {
             const response = await fetch(API_URL);
             const data = await response.json();
-            setTasks(data);
+           
+            if (!Array.isArray(data)) {
+                throw new Error("Formato de respuesta incorrecto");
+              }
+              const formattedTasks = data.map(task => ({
+                ...task,
+                start_date: new Date(task.start_date).toLocaleString("es-CO", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                }).replace(",", ""), // Elimina la coma entre fecha y hora
+              }));
+      
+              setTasks(formattedTasks);
         } catch (error) {
             console.error("error obteniendo tareas:",error);
         }
@@ -22,6 +39,7 @@ export const useGanttTasks = () => {
                 body:JSON.stringify(task),
             });
             if (response.ok) fetchTasks();
+            toast.success("Tarea creada exitosamente",);
         } catch (error) {
             console.error("error creando tareas:",error);
         }
@@ -45,6 +63,7 @@ export const useGanttTasks = () => {
                 method: "DELETE",
             });
             if(response.ok) fetchTasks();
+            toast.success("Tarea eliminada correctamente");
         } catch (error) {
             console.error("error eliminado tarea:",error);
         }
