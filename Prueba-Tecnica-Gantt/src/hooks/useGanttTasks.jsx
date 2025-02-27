@@ -23,7 +23,7 @@ export const useGanttTasks = () => {
                   hour: "2-digit",
                   minute: "2-digit",
                   hour12: false,
-                }).replace(",", ""), // Elimina la coma entre fecha y hora
+                }).replace(",", ""), 
               }));
       
               setTasks(formattedTasks);
