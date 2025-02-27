@@ -83,7 +83,7 @@ useEffect(() => {
       const updatedTask = {
         id,
         text: task.text,
-        start_date: task.start_date.toISOString().split("T")[0], // Formato YYYY-MM-DD
+        start_date: task.start_date.toISOString().split("T")[0], 
         duration: task.duration,
         progress: task.progress || 0,
         parent: task.parent || null,
@@ -104,7 +104,7 @@ useEffect(() => {
       const updatedTask = {
         id,
         text: task.text,
-        start_date: startDate.toISOString().split("T")[0], // Formato YYYY-MM-DD
+        start_date: startDate.toISOString().split("T")[0], 
         duration: task.duration,
         progress: task.progress || 0,
         parent: task.parent || null,
