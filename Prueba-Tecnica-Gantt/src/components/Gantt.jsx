@@ -70,11 +70,31 @@ const GanttChart = () => {
         parent: task.parent,
       };
       try {
-        await updateTask(updatedTask);
+        await updateTask(id, updatedTask);
       } catch (error) {
         console.error("Error actualizando tarea:", error);
       }
     });
+    
+    gantt.attachEvent("onTaskDrag", async (id, mode, task) => {
+      if (mode === "move" || mode === "resize") { 
+        const updatedTask = {
+          text: task.text,
+          start_date: task.start_date.split("T")[0], // Convertir a YYYY-MM-DD
+          duration: task.duration,
+          progress: task.progress,
+          parent: task.parent,
+        };
+    
+        try {
+          console.log("📤 Moviendo tarea, enviando actualización:", updatedTask);
+          await updateTask(id, updatedTask);
+        } catch (error) {
+          console.error("❌ Error actualizando tarea tras mover:", error);
+        }
+      }
+    });
+    
 
     // Evento para eliminar tarea
     gantt.attachEvent("onAfterTaskDelete", async (id) => {

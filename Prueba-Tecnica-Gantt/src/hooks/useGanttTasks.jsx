@@ -52,7 +52,12 @@ export const useGanttTasks = () => {
                 headers:{"Content-Type":"application/json"},
                 body:JSON.stringify(updatedTask),
             });
-            if(response.ok) fetchTasks();
+            if (response.ok) {
+                toast.success("Tarea actualizada correctamente"); 
+                fetchTasks(); 
+            } else {
+                toast.error("Error al actualizar la tarea");
+            }
         } catch (error) {
             console.error("error actualizando tareas:",error);
         }
