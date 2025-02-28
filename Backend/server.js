@@ -3,6 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const pool = require("./db");
 
+const relationRoutes = require("./routes/relationsroutes");
+const tasksRoutes = require("./routes/task");
+
 const app = express();
 
 // 🔥 Mostrar variables cargadas (depuración)
@@ -12,8 +15,8 @@ console.log("📌 Permitido CORS para:", process.env.FRONTEND_URL || "❌ No def
 // 🔥 Configuración de CORS (permite localhost y producción en Vercel)
 app.use(cors({
   origin: [
-    process.env.FRONTEND_URL || "https://prueba-tecnica-gantt.vercel.app", // Frontend en producción
-    "http://localhost:5173" // Frontend en desarrollo
+    process.env.FRONTEND_URL || "https://prueba-tecnica-gantt.vercel.app", // Producción en Vercel
+    "http://localhost:5173" // Desarrollo local
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -21,33 +24,9 @@ app.use(cors({
 
 app.use(express.json());
 
-// 📌 Ruta para obtener todas las tareas
-app.get("/api/tasks", async (req, res) => {
-  try {
-    const allTasks = await pool.query("SELECT * FROM tasks");
-    res.json(allTasks.rows);
-  } catch (err) {
-    console.error("Error obteniendo tareas:", err.message);
-    res.status(500).send("Error en el servidor");
-  }
-});
-
-// 📌 Ruta para crear una nueva tarea
-app.post("/api/tasks", async (req, res) => {
-  try {
-    const { text, start_date, duration, progress, parent } = req.body;
-
-    const newTask = await pool.query(
-      "INSERT INTO tasks (text, start_date, duration, progress, parent) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [text, start_date, duration, progress, parent]
-    );
-
-    res.json(newTask.rows[0]); // 🔥 Devuelve la nueva tarea creada
-  } catch (err) {
-    console.error("Error al crear la tarea:", err.message);
-    res.status(500).send("Error en el servidor");
-  }
-});
+// 📌 Rutas
+app.use("/api/tasks", tasksRoutes);
+app.use("/api/relations", relationRoutes);
 
 // 🔍 Prueba de conexión
 app.get("/", (req, res) => {
