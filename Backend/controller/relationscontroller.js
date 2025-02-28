@@ -1,4 +1,4 @@
-const pool = require("../db");
+const pool = require("../db"); // Asegúrate de importar tu conexión a PostgreSQL
 
 const createRelation = async (req, res) => {
     try {
@@ -9,7 +9,7 @@ const createRelation = async (req, res) => {
             [source_task_id, target_task_id, type]
         );
 
-        res.status(201).json(result.rows[0]); 
+        res.status(201).json(result.rows[0]); // Retorna la relación creada
     } catch (error) {
         console.error("Error creando relación:", error);
         res.status(500).json({ error: "Error al crear relación" });

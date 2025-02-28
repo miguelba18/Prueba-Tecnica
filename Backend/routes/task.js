@@ -2,19 +2,18 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 
-// 📌 Obtener todas las tareas
-router.get("/", async (req, res) => {  
+// Obtener todas las tareas
+router.get("/tasks", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM tasks");
     res.json(result.rows);
   } catch (err) {
-    console.error("❌ Error obteniendo tareas:", err.message);
-    res.status(500).send("Error en el servidor");
+    console.error(err.message);
   }
 });
 
-// 📌 Crear una nueva tarea
-router.post("/", async (req, res) => {  
+// Crear una nueva tarea
+router.post("/tasks", async (req, res) => {
   try {
     const { text, start_date, duration, progress, parent } = req.body;
     const newTask = await pool.query(
@@ -23,13 +22,12 @@ router.post("/", async (req, res) => {
     );
     res.json(newTask.rows[0]);
   } catch (err) {
-    console.error("❌ Error creando tarea:", err.message);
-    res.status(500).send("Error en el servidor");
+    console.error(err.message);
   }
 });
 
-// 📌 Actualizar una tarea
-router.put("/:id", async (req, res) => {
+// Actualizar una tarea
+router.put("/tasks/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { text, start_date, duration, progress, parent } = req.body;
@@ -39,20 +37,18 @@ router.put("/:id", async (req, res) => {
     );
     res.json(updateTask.rows[0]);
   } catch (err) {
-    console.error("❌ Error actualizando tarea:", err.message);
-    res.status(500).send("Error en el servidor");
+    console.error(err.message);
   }
 });
 
-// 📌 Eliminar una tarea
-router.delete("/:id", async (req, res) => {
+// Eliminar una tarea
+router.delete("/tasks/:id", async (req, res) => {
   try {
     const { id } = req.params;
     await pool.query("DELETE FROM tasks WHERE id = $1", [id]);
     res.json({ message: "Tarea eliminada correctamente" });
   } catch (err) {
-    console.error("❌ Error eliminando tarea:", err.message);
-    res.status(500).send("Error en el servidor");
+    console.error(err.message);
   }
 });
 

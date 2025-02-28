@@ -3,16 +3,8 @@ const { createRelation, deleteRelation, getRelations } = require("../controller/
 
 const router = express.Router();
 
-router.post("/", (req, res) => {
-  createRelation(req, res);
-});
-
-router.delete("/:id", (req, res) => {
-  deleteRelation(req, res);
-});
-
-router.get("/", (req, res) => {
-  getRelations(req, res);
-});
+router.post("/", createRelation); 
+router.delete("/:id", deleteRelation); 
+router.get("/", getRelations); // Obtener todas las relaciones
 
 module.exports = router;
