@@ -15,11 +15,12 @@ console.log("📌 Permitido CORS para:", process.env.FRONTEND_URL || "❌ No def
 // 🔥 Configuración de CORS (permite localhost y producción en Vercel)
 app.use(cors({
   origin: [
-    process.env.FRONTEND_URL || "https://prueba-tecnica-gantt.vercel.app", // Producción en Vercel
-    "http://localhost:5173" // Desarrollo local
+    process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://prueba-tecnica-gantt-j6rg95l36-miguelba18s-projects.vercel.app",
+    "http://localhost:5173"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true // 🔥 Si en el futuro usas autenticación con cookies o JWT
 }));
 
 app.use(express.json());
