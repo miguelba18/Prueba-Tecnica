@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from "react-toastify";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; // Solo la base
+const API_URL = process.env.VITE_API_URL || "http://localhost:5000"; // Solo la base
 
 export const useRelationsTasks = () => {
   const [relations, setRelations] = useState([]);
