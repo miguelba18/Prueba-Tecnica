@@ -5,7 +5,6 @@ const pool = require("../db");
 // 📌 Obtener todas las tareas
 router.get("/", async (req, res) => {  
   try {
-    console.log("📌 GET /api/tasks"); // 🔥 Log para verificar llamadas
     const result = await pool.query("SELECT * FROM tasks");
     res.json(result.rows);
   } catch (err) {
@@ -17,7 +16,6 @@ router.get("/", async (req, res) => {
 // 📌 Crear una nueva tarea
 router.post("/", async (req, res) => {  
   try {
-    console.log("📌 POST /api/tasks:", req.body);
     const { text, start_date, duration, progress, parent } = req.body;
     const newTask = await pool.query(
       "INSERT INTO tasks (text, start_date, duration, progress, parent) VALUES ($1, $2, $3, $4, $5) RETURNING *",
@@ -33,7 +31,6 @@ router.post("/", async (req, res) => {
 // 📌 Actualizar una tarea
 router.put("/:id", async (req, res) => {
   try {
-    console.log("📌 PUT /api/tasks/:id", req.params.id, req.body);
     const { id } = req.params;
     const { text, start_date, duration, progress, parent } = req.body;
     const updateTask = await pool.query(
@@ -50,7 +47,6 @@ router.put("/:id", async (req, res) => {
 // 📌 Eliminar una tarea
 router.delete("/:id", async (req, res) => {
   try {
-    console.log("📌 DELETE /api/tasks/:id", req.params.id);
     const { id } = req.params;
     await pool.query("DELETE FROM tasks WHERE id = $1", [id]);
     res.json({ message: "Tarea eliminada correctamente" });
