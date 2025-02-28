@@ -8,7 +8,11 @@ const tasksRoutes = require("./routes/task");
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://prueba-tecnica-gantt-4nq81paj4-miguelba18s-projects.vercel.app", // Dominio de tu frontend
+  methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
+  allowedHeaders: ["Content-Type", "Authorization"] // Encabezados permitidos
+}));
 app.use(express.json());
 
 // Rutas
