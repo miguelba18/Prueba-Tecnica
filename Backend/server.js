@@ -5,8 +5,12 @@ const cors = require("cors");
 const app = express();
 
 // 📌 Importar rutas
-const tasksRoutes = require("./routes/task"); // 🔥 Verifica que la ruta sea correcta
+const tasksRoutes = require("./routes/task");
 const relationRoutes = require("./routes/relationsroutes");
+
+// 🔥 Mostrar variables de entorno cargadas
+console.log("📌 BASE DE DATOS:", process.env.DATABASE_URL ? "✅ OK" : "❌ No definida");
+console.log("📌 FRONTEND_URL:", process.env.FRONTEND_URL || "❌ No definida");
 
 // 🔥 Configuración de CORS
 app.use(cors({
@@ -29,10 +33,10 @@ app.get("/", (req, res) => {
   res.send("🚀 Backend funcionando correctamente en Vercel!");
 });
 
-// 🚀 No usar `app.listen()` en Vercel (solo para local)
+// 🚀 No usar `app.listen()` en Vercel (solo local)
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
+  app.listen(PORT, () => console.log(`🚀 Servidor corriendo en puerto ${PORT}`));
 }
 
 module.exports = app;
