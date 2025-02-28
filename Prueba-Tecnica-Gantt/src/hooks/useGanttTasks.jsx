@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import { toast } from "react-toastify";
-//nodes no usa meta para produccion verga de error, le iba a decir lo mismo jaja 
-const API_URL = process.env.VITE_API_URL || 'https://backend-at9b6v5cb-miguelba18s-projects.vercel.app/api/tasks';
+
+const API_URL = 'http://localhost:5000/api/tasks';
 
 export const useGanttTasks = () => {
     const [tasks, setTasks] = useState([]);
