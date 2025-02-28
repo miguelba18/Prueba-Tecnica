@@ -2,8 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const pool = require("./db");
-const relationRoutes = require("./routes/relationsroutes"); // Ruta corregida
-const tasksRoutes = require("./routes/task"); // Ruta corregida
+const relationRoutes = require("./routes/relationsroutes"); 
+const tasksRoutes = require("./routes/task"); 
 
 const app = express();
 
@@ -46,5 +46,11 @@ app.post("/tasks", async (req, res) => {
   }
 });
 
-// 🚨 Importante: No uses app.listen() en Vercel
+// 🚨 Importante: No uses app.listen() en Vercel, solo para uso local
+/*if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Servidor corriendo en puerto ${PORT}`);
+  });
+}*/
 module.exports = app;

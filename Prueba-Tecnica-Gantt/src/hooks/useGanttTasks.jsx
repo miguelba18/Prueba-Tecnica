@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import { toast } from "react-toastify";
 
-const API_URL = 'http://localhost:5000/api/tasks';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/tasks';
 
 export const useGanttTasks = () => {
     const [tasks, setTasks] = useState([]);
