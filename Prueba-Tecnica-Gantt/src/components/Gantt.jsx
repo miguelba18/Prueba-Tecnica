@@ -3,7 +3,6 @@ import "dhtmlx-gantt/codebase/dhtmlxgantt.css";
 import gantt from "dhtmlx-gantt";
 import { useGanttTasks } from "../hooks/useGanttTasks";
 import { useRelationsTasks } from "../hooks/useRelationsTasks";
-import { motion } from "framer-motion";
 
 const GanttChart = () => {
   const ganttContainer = useRef(null);
@@ -29,24 +28,24 @@ useEffect(() => {
     "start_to_finish": "3",
   };
   const loadGanttData = async () => {
-      
-      const formattedData = {
-          data: tasks.map(task => ({
-              ...task,
-              start_date: task.start_date.split("T")[0],
-          })),
-          links: relations.map(relation => ({
-              id: relation.id,
-              source: relation.source_task_id,
-              target: relation.target_task_id,
-              type: typeMapping[relation.type]
-          }))
-      };
-      
-      gantt.clearAll();
-      gantt.parse(formattedData);
-  };
+    const formattedData = {
+      data: tasks.map(task => ({
+        ...task,
+        start_date: task.start_date, // Ya es "2025-02-25"
+    })),
+        links: relations.map(relation => ({
+            id: relation.id,
+            source: relation.source_task_id,
+            target: relation.target_task_id,
+            type: typeMapping[relation.type]
+        }))
+    };
 
+    gantt.clearAll();
+    gantt.parse(formattedData);
+};
+
+loadGanttData();
   loadGanttData();
 }, [tasks, relations]);
 
@@ -61,11 +60,12 @@ useEffect(() => {
       const newTask = {
         text: task.text,
         start_date: new Date(task.start_date).toISOString().split("T")[0],
+        
         duration: task.duration,
         progress: task.progress || 0,
         parent: task.parent || null,
       };
-
+      
       try {
         const createdTask = await createTasks(newTask);
         if (createdTask && createdTask.id) {

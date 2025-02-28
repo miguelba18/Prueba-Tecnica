@@ -23,10 +23,12 @@ export const useGanttTasks = () => {
                   hour: "2-digit",
                   minute: "2-digit",
                   hour12: false,
+                  timeZone: "UTC"
                 }).replace(",", ""), 
               }));
       
               setTasks(formattedTasks);
+              console.log("API",formattedTasks);
         } catch (error) {
             console.error("error obteniendo tareas:",error);
         }
