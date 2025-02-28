@@ -1,7 +1,7 @@
 import {useState, useEffect, use} from 'react';
 import { toast } from "react-toastify";
 
-const API_URL = 'http://localhost:5000/api/relations';
+const API_URL = 'https://backend-xi-wheat-65.vercel.app/api/relations';
 
 export const useRelationsTasks = () => {
     const [relations, setRelations] = useState([]);

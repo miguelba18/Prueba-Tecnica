@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import { toast } from "react-toastify";
 
-const API_URL = 'http://localhost:5000/api/tasks';
+const API_URL = 'https://backend-xi-wheat-65.vercel.app/api/tasks';
 
 export const useGanttTasks = () => {
     const [tasks, setTasks] = useState([]);
